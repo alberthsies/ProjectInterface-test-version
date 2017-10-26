@@ -92,6 +92,7 @@ public class KitchenSinkController {
 
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
+	public ProjectInterface funInterface = new ProjectInterface();
 
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
@@ -100,6 +101,7 @@ public class KitchenSinkController {
 		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		TextMessageContent message = event.getMessage();
 		handleTextContent(event.getReplyToken(), event, message);
+		
 	}
 
 	@EventMapping
@@ -212,6 +214,50 @@ public class KitchenSinkController {
         String text = content.getText();
 
         log.info("Got text message from {}: {}", replyToken, text);
+        
+        funInterface.process(text);
+        //now the replyType of funInterface will change depending on the text
+        
+        //TODO manage the output reply based on the replyType
+        
+        
+        
+        //log.info("Returns echo message {}: {}", replyToken, reply);
+      	this.replyText(replyToken, "Hello! How may I help you today?");
+        /*
+        switch (funInterface.replyType) {
+        		case "text":{
+        			//test case
+        			String reply = null;
+                	
+                 //log.info("Returns echo message {}: {}", replyToken, reply);
+                 this.replyText(replyToken, "Hello! How may I help you today?");
+        			
+        			//base on funInterface.replyText
+        			break;
+        		}
+        		case "image":{
+        			//base on funInterface.replyImageAddress
+        			break;
+        		}
+        		case "carousel":{
+        			//base on funInterface.replyCarousel
+        			break;
+        		}
+        		case "confirm":{
+        			//the message is always the same, i.e. yes & no refer to provided codes
+        			break;
+        		}
+        		case "unknown":{
+        			//the message is always the same, e.g. "sorry i did not understand that"
+        			break;
+        		}
+        		default:
+        			break;
+        }
+        
+        
+        /*
         switch (text) {
             case "profile": {
                 String userId = event.getSource().getUserId();
@@ -273,7 +319,7 @@ public class KitchenSinkController {
                         itscLOGIN + " says " + reply
                 );
                 break;
-        }
+        }*/
     }
 
 	static String createUri(String path) {
